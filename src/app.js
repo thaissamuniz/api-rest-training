@@ -1,5 +1,7 @@
 import express from "express";
 import db from "./config/dbConnect.js";
+import livros from "./models/Livro.js";
+import routes from "./routes/index.js"
 
 db.on("error", console.log.bind(console, 'erro de conexão'));
 db.once("open", () => {
@@ -10,27 +12,16 @@ const app = express();
 
 app.use(express.json());
 
-const livros = [
-    { id: 1, "titulo": "Senhor dos anéis" },
-    { id: 2, "titulo": "O Hobbit" }
-]
+routes(app);
 
-app.get('/', (req, res) => {
-    res.status(200).send('curso de node');
-})
-
-app.get('/livros', (req, res) => {
-    res.status(200).json(livros)
-})
+// const livros = [
+//     { id: 1, "titulo": "Senhor dos anéis" },
+//     { id: 2, "titulo": "O Hobbit" }
+// ]
 
 app.get('/livros/:id', (req, res) => {
     let index = buscaLivro(req.params.id);
     res.json(livros[index]);
-})
-
-app.post('/livros', (req, res) => {
-    livros.push(req.body);
-    res.status(201).send('Livro cadastrado')
 })
 
 app.put('/livros/:id', (req, res) => {
